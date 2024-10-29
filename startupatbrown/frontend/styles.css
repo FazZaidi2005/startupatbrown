@@ -1,0 +1,58 @@
+/* purgecss start ignore */
+@tailwind  base;
+@tailwind  components;
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+button:focus {
+    @apply outline-none
+}
+
+.surveyButton {
+    @apply p-3 rounded-lg hover:text-red-700 hover:bg-red-50 transition-all duration-300 text-xl text-gray-600
+
+}
+
+.fade-enter {
+    opacity: 0;
+    transform: translateY(-25%);
+}
+.fade-enter-active {
+    opacity: 1;
+    transform: translateY(0%);
+}
+.fade-exit {
+    opacity: 1;
+    transform: translateY(0%);
+}
+.fade-exit-active {
+    opacity: 0;
+    transform: translateY(25%);
+}
+.fade-enter-active,
+.fade-exit-active {
+    transition: opacity 600ms, transform 600ms;
+}
+
+.red-link {
+    @apply text-red-600 font-bold font-display
+}
+.red-link:hover {
+    @apply text-red-500
+}
+.red-link:focus {
+    @apply text-red-500 underline
+}
+
+.polyfill-button {
+    -webkit-appearance: none;
+}
+.full-height {
+    height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+    height: calc(var(--vh, 1vh) * 100);
+}
+/* purgecss end ignore */
+@tailwind  utilities;
