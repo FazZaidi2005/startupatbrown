@@ -1,337 +1,358 @@
+// resources.js
+import { useState } from 'react';
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { surveyQuestions } from "../data/surveyQuestions";
-import { resourceTrees } from "../data/resourceTrees";
-import { useState } from 'react';
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { Search, Sparkles, ExternalLink } from 'lucide-react';
+
+// Moved categories to a separate constant to improve readability
+const CATEGORIES = [
+    {
+        id: "internships",
+        name: "Internships & Fellowships",
+        sections: [
+            {
+                title: "Top Internship Programs",
+                resources: [
+                    { name: "8VC Fellowship", description: "Immersive 3-month internship placing students into innovative startups", url: "#" },
+                    { name: "Kleiner Perkins Fellows", description: "Engineering, Design, and Product Fellows programs connecting with startups", url: "#" },
+                    { name: "Bessemer Fellows", description: "Internship with tech companies, offering mentorship and community connections", url: "#" },
+                    { name: "Contrary Talent", description: "Venture fund-backed program investing in top early-career talent", url: "#" },
+                    { name: "IDEO CoLab Fellowship", description: "Research and design fellowship focusing on emerging technologies", url: "#" }
+                ]
+            },
+            {
+                title: "Virtual & Global Internships",
+                resources: [
+                    { name: "Entrepreneurship Internship Abroad", description: "Connects Brown students to global startup internships", url: "#" },
+                    { name: "Intern From Home", description: "Virtual internships connecting students to companies", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "vc",
+        name: "Venture Capital Programs",
+        sections: [
+            {
+                title: "Student-Led VC Funds",
+                resources: [
+                    { name: "Dorm Room Fund", description: "Student-run venture fund providing $20,000 checks and mentorship", url: "#" },
+                    { name: "Contrary Capital", description: "Venture fund backed by founders of Tesla and Reddit", url: "#" },
+                    { name: "Rough Draft Ventures", description: "Student team building network of student founders", url: "#" },
+                    { name: "Pear VC", description: "Helps students build defensible, category-defining companies", url: "#" },
+                    { name: "Van Wickle Ventures", description: "Student-run fund for Brown and RISD-affiliated startups", url: "#" }
+                ]
+            },
+            {
+                title: "VC Fellowship Opportunities",
+                resources: [
+                    { name: "Dorm Room Fund Investor Partner", description: "Partner role discovering and backing student founders", url: "#" },
+                    { name: "Blueprint Investor Track", description: "Six-week masterclass for diverse aspiring venture investors", url: "#" },
+                    { name: ".406 Venture Fellow", description: "Fellowship focusing on market-leading companies in key sectors", url: "#" },
+                    { name: "Rough Draft Fellowship", description: "Empowers student founders through capital and mentorship", url: "#" },
+                    { name: "Contrary Partner", description: "Invests in top early-career talent in student VC space", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "academic",
+        name: "Academic Programs",
+        sections: [
+            {
+                title: "Brown University Programs",
+                resources: [
+                    { name: "Venture Capital Inclusion Lab", description: "Research and practitioner lab supporting economic inclusivity", url: "#" },
+                    { name: "Entrepreneurship Certificate", description: "Structured program for entrepreneurship-focused students", url: "#" },
+                    { name: "Brown Technology Innovations", description: "Commercializing Brown University technology", url: "#" },
+                    { name: "PRIME (Master's Degree)", description: "STEM Master of Science in Innovation Management and Entrepreneurship", url: "#" },
+                    { name: "Social Innovation Fellowship", description: "Fellowship offering social innovation experience", url: "#" }
+                ]
+            },
+            {
+                title: "Coursework",
+                resources: [
+                    { name: "Explore Brown's Entrepreneurial Courses", description: "Variety of courses on entrepreneurship at Brown", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "events",
+        name: "Events & Competitions",
+        sections: [
+            {
+                title: "Early-Stage Competitions",
+                resources: [
+                    { name: "WE@Brown Pitch", description: "Competition empowering women entrepreneurs at Brown", url: "#" },
+                    { name: "Hack@Brown", description: "Annual hackathon for experimenting with new technologies", url: "#" },
+                    { name: "Innovation Dojo", description: "Workshop series on innovation and entrepreneurship", url: "#" },
+                    { name: "Hack@Home", description: "Virtual hackathon for exploring computer science", url: "#" }
+                ]
+            },
+            {
+                title: "Conferences & Events",
+                resources: [
+                    { name: "Startup@Brown", description: "Conference connecting students with startup opportunities", url: "#" },
+                    { name: "Better World by Design", description: "Student-led initiative celebrating interdisciplinary collaboration", url: "#" },
+                    { name: "WE@Brown", description: "Empowers women to turn ideas into ventures", url: "#" },
+                    { name: "Future of Sustainable Investing (FSIcon)", description: "Conference on sustainable investing", url: "#" },
+                    { name: "Synapse Trips", description: "Nelson Center’s travel program for entrepreneurs", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "groups",
+        name: "Student Groups",
+        sections: [
+            {
+                title: "Entrepreneurship Organizations",
+                resources: [
+                    { name: "Brown EP", description: "Main student entrepreneurship initiative at Brown", url: "#" },
+                    { name: "Brown RISD Innovation Community", description: "Bringing together Brown and RISD innovators", url: "#" },
+                    { name: "Design@Brown", description: "Promoting design education in the Brown community", url: "#" },
+                    { name: "RISD E'Ship", description: "Supports business ventures within art and design", url: "#" },
+                    { name: "Design for America", description: "Community focused on social innovation and design", url: "#" }
+                ]
+            },
+            {
+                title: "Specialized Interest Groups",
+                resources: [
+                    { name: "RISD IDSA", description: "Exposes students to interdisciplinary design fields", url: "#" },
+                    { name: "Full Stack at Brown", description: "Club promoting software engineering projects", url: "#" },
+                    { name: "Brown/RISD STEAM", description: "Connects science and art in academia and business", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "accelerators",
+        name: "Accelerators & Support",
+        sections: [
+            {
+                title: "Growth Programs",
+                resources: [
+                    { name: "Breakthrough Lab (B-Lab)", description: "Brown's summer accelerator for high-impact ventures", url: "#" },
+                    { name: "MassChallenge", description: "Rhode Island accelerator connecting entrepreneurs to resources", url: "#" },
+                    { name: "Envision Accelerator", description: "Virtual accelerator for underrepresented founders", url: "#" },
+                    { name: "Community Lab @ Nelson", description: "Community for high-impact and scalable solutions", url: "#" },
+                    { name: "Sustainable Enterprise Greenhouse", description: "Support for social entrepreneurs", url: "#" }
+                ]
+            },
+            {
+                title: "External Support Programs",
+                resources: [
+                    { name: "YC Startup School", description: "Free online program for global founders", url: "#" },
+                    { name: "CIC", description: "Resources and connections for innovators", url: "#" },
+                    { name: "Venture Cafe", description: "Free innovation services and community events", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "funding",
+        name: "Grants & Funding",
+        sections: [
+            {
+                title: "Small Grants",
+                resources: [
+                    { name: "Explore Grant", description: "Initial funding for student entrepreneurs", url: "#" },
+                    { name: "Expand Grants", description: "Grants for entrepreneurial projects", url: "#" },
+                    { name: "Maker Grant", description: "Up to $500 for student design projects", url: "#" }
+                ]
+            },
+            {
+                title: "Large Grants",
+                resources: [
+                    { name: "Brown Venture Prize", description: "$50,000 prize for advanced entrepreneurial ventures", url: "#" },
+                    { name: "Thiel Fellowship", description: "$100,000 grant and support for young entrepreneurs", url: "#" },
+                    { name: "1517 Fund", description: "VC firm backing early-stage founders", url: "#" }
+                ]
+            }
+        ]
+    },
+    {
+        id: "alumni",
+        name: "Brown Alumni VC & Angel Groups",
+        sections: [
+            {
+                title: "Alumni Venture Capital",
+                resources: [
+                    { name: "Brown Angel Group", description: "Global network of Brown alumni investing in startups", url: "#" },
+                    { name: "Waterman Ventures", description: "Brown alumni venture capital group", url: "#" },
+                    { name: "Unshackled Ventures", description: "Focuses on immigrant founders with visa support", url: "#" }
+                ]
+            }
+        ]
+    }
+];
+
 
 const Resources = () => {
-    const trees = { surveyQuestions: surveyQuestions, resources: resourceTrees }
-    const router = useRouter()
-    const sorted = Object.values(trees.resources).sort((a, b) => (a.title > b.title) ? 1 : -1)
+    const router = useRouter();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [activeCategory, setActiveCategory] = useState("all");
 
-    const { display } = router.query
-    const disValues = display && JSON.parse(display)
-    const values = Array.isArray(disValues) ?
-        disValues.map(item => sorted.find(element => element.id === item)) : sorted
-
-    // State for managing dropdowns
-    const [openCategory, setOpenCategory] = useState(null);
-    const [openSubcategory, setOpenSubcategory] = useState(null);
-
-    // Resource categories data structure
-    const resourceCategories = {
-        professional: {
-            title: "Professional",
-            subcategories: {
-                networking: {
-                    name: "Networking",
-                    resources: [
-                        {
-                            id: "p1",
-                            name: "Brown Alumni Network",
-                            url: "#",
-                            description: "Connect with Brown alumni in various industries"
-                        },
-                        {
-                            id: "p2",
-                            name: "LinkedIn Groups",
-                            url: "#",
-                            description: "Professional networking groups for Brown entrepreneurs"
-                        }
-                    ]
-                },
-                mentorship: {
-                    name: "Mentorship",
-                    resources: [
-                        {
-                            id: "p3",
-                            name: "Mentor Match Program",
-                            url: "#",
-                            description: "Find a mentor in your field of interest"
-                        },
-                        {
-                            id: "p4",
-                            name: "Industry Advisors",
-                            url: "#",
-                            description: "Connect with industry professionals for guidance"
-                        }
-                    ]
-                },
-                careerDevelopment: {
-                    name: "Career Development",
-                    resources: [
-                        {
-                            id: "p5",
-                            name: "Resume Workshop",
-                            url: "#",
-                            description: "Resources for crafting the perfect resume"
-                        },
-                        {
-                            id: "p6",
-                            name: "Interview Prep",
-                            url: "#",
-                            description: "Practice interviews and preparation materials"
-                        }
-                    ]
-                }
-            }
-        },
-        students: {
-            title: "Students",
-            subcategories: {
-                academics: {
-                    name: "Academics",
-                    resources: [
-                        {
-                            id: "s1",
-                            name: "Course Planning",
-                            url: "#",
-                            description: "Guide to entrepreneurship courses at Brown"
-                        },
-                        {
-                            id: "s2",
-                            name: "Study Groups",
-                            url: "#",
-                            description: "Join entrepreneurship study groups"
-                        }
-                    ]
-                },
-                organizations: {
-                    name: "Student Organizations",
-                    resources: [
-                        {
-                            id: "s3",
-                            name: "Entrepreneurship Club",
-                            url: "#",
-                            description: "Join Brown's premier entrepreneurship organization"
-                        },
-                        {
-                            id: "s4",
-                            name: "Innovation Lab",
-                            url: "#",
-                            description: "Work on innovative projects with other students"
-                        }
-                    ]
-                },
-                events: {
-                    name: "Campus Events",
-                    resources: [
-                        {
-                            id: "s5",
-                            name: "Startup Weekend",
-                            url: "#",
-                            description: "54-hour startup creation event"
-                        },
-                        {
-                            id: "s6",
-                            name: "Pitch Competitions",
-                            url: "#",
-                            description: "Present your ideas and win funding"
-                        }
-                    ]
-                }
-            }
-        },
-        opportunities: {
-            title: "Opportunities",
-            subcategories: {
-                internships: {
-                    name: "Internships",
-                    resources: [
-                        {
-                            id: "o1",
-                            name: "Summer Internships",
-                            url: "#",
-                            description: "Find startup internships for the summer"
-                        },
-                        {
-                            id: "o2",
-                            name: "Remote Opportunities",
-                            url: "#",
-                            description: "Remote internship positions"
-                        }
-                    ]
-                },
-                jobs: {
-                    name: "Full-time Jobs",
-                    resources: [
-                        {
-                            id: "o3",
-                            name: "Job Board",
-                            url: "#",
-                            description: "Current job openings in startups"
-                        },
-                        {
-                            id: "o4",
-                            name: "Recent Grad Positions",
-                            url: "#",
-                            description: "Entry-level positions for new graduates"
-                        }
-                    ]
-                },
-                research: {
-                    name: "Research",
-                    resources: [
-                        {
-                            id: "o5",
-                            name: "Research Projects",
-                            url: "#",
-                            description: "Join ongoing research in entrepreneurship"
-                        },
-                        {
-                            id: "o6",
-                            name: "Labs & Centers",
-                            url: "#",
-                            description: "Research centers focused on innovation"
-                        }
-                    ]
-                }
-            }
+    const filterResources = (categories) => {
+        if (searchTerm === "" && activeCategory === "all") {
+            return categories;
         }
+
+        return categories.map(category => {
+            if (activeCategory !== "all" && category.id !== activeCategory) {
+                return null;
+            }
+
+            const filteredSections = category.sections.map(section => {
+                const filteredResources = section.resources.filter(resource => {
+                    if (searchTerm === "") return true;
+                    
+                    const searchLower = searchTerm.toLowerCase();
+                    return (
+                        resource.name.toLowerCase().includes(searchLower) ||
+                        resource.description.toLowerCase().includes(searchLower)
+                    );
+                });
+
+                if (filteredResources.length === 0) return null;
+
+                return {
+                    ...section,
+                    resources: filteredResources
+                };
+            }).filter(Boolean);
+
+            if (filteredSections.length === 0) return null;
+
+            return {
+                ...category,
+                sections: filteredSections
+            };
+        }).filter(Boolean);
     };
 
-    // Toggle functions for dropdowns
-    const toggleCategory = (category) => {
-        setOpenCategory(openCategory === category ? null : category);
-        setOpenSubcategory(null); // Close any open subcategory
-    };
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Head>
+                <title>Resources | Venture@Brown</title>
+            </Head>
 
-    const toggleSubcategory = (subcategory) => {
-        setOpenSubcategory(openSubcategory === subcategory ? null : subcategory);
-    };
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <Navbar />
+                
+                {/* Hero Section */}
+                <div className="text-center max-w-3xl mx-auto mt-16 mb-12">
+                    <h1 className="text-5xl font-bold text-gray-900 font-display mb-6">
+                        Venture Resources
+                    </h1>
+                    <p className="text-xl text-gray-600 mb-8">
+                        Everything you need to start and grow your venture at Brown
+                    </p>
+                    <Link href="/suggest">
+                        <a className="inline-flex items-center space-x-2 bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-500 transition-colors duration-200">
+                            <Sparkles className="w-5 h-5" />
+                            <span>Suggest a Resource</span>
+                        </a>
+                    </Link>
+                </div>
 
-    const linkPillStyle = `py-1 hover:bg-red-50 hover:border-red-300 hover:text-red-600
-    focus:bg-red-50 focus:border-red-300 focus:text-red-600
-    transition-all duration-200
-    px-2 text-sm text-gray-700 md:text-base border border-gray-200 shadow-sm rounded-full inline-block mb-2 mr-2`
-
-    return <>
-        <Head>
-            <title>Resources | Venture@Brown</title>
-        </Head>
-        <div className="max-w-3xl mx-auto px-4 my-24">
-            <Navbar />
-            <Link href="/suggest">
-                <a className="red-link uppercase text-lg">Suggest a resource</a>
-            </Link>
-
-            <h1 className="text-5xl font-bold text-gray-900 font-display">Resources</h1>
-
-            {/* Categories with Nested Dropdowns */}
-            <section className="my-6">
-                <h2 className="font-display text-2xl font-semibold mb-4 text-gray-800">Categories</h2>
-               
-                <div className="space-y-4">
-                    {Object.entries(resourceCategories).map(([categoryKey, category]) => (
-                        <div key={categoryKey} className="border rounded-lg shadow-sm bg-white">
-                            {/* Main Category Button */}
+                {/* Search and Filters */}
+                <div className="max-w-2xl mx-auto mb-12">
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Search className="h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search all resources..."
+                            className="block w-full pl-12 pr-4 py-3 text-lg rounded-xl border border-gray-200 
+                                     focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200
+                                     hover:border-gray-300 bg-white shadow-sm"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-3 mt-6 justify-center">
+                        <button
+                            onClick={() => setActiveCategory("all")}
+                            className={`px-4 py-2 rounded-full font-medium transition-all duration-200 
+                                ${activeCategory === "all" ? "bg-gray-900 text-white" : "bg-white text-gray-600 hover:bg-gray-100"}`}
+                        >
+                            All Resources
+                        </button>
+                        {CATEGORIES.map((category) => (
                             <button
-                                onClick={() => toggleCategory(categoryKey)}
-                                className="w-full px-4 py-3 flex items-center justify-between hover:bg-red-50 rounded-t-lg transition-colors duration-200"
+                                key={category.id}
+                                onClick={() => setActiveCategory(category.id)}
+                                className={`px-4 py-2 rounded-full font-medium transition-all duration-200 
+                                    ${activeCategory === category.id ? "bg-gray-900 text-white" : "bg-white text-gray-600 hover:bg-gray-100"}`}
                             >
-                                <span className="font-medium text-gray-800">{category.title}</span>
-                                {openCategory === categoryKey ?
-                                    <ChevronUp className="h-5 w-5 text-gray-500" /> :
-                                    <ChevronDown className="h-5 w-5 text-gray-500" />
-                                }
+                                {category.name}
                             </button>
-                           
-                            {/* Subcategories */}
-                            {openCategory === categoryKey && (
-                                <div className="border-t">
-                                    {Object.entries(category.subcategories).map(([subKey, subcategory]) => (
-                                        <div key={subKey} className="border-b last:border-b-0">
-                                            {/* Subcategory Button */}
-                                            <button
-                                                onClick={() => toggleSubcategory(subKey)}
-                                                className="w-full px-6 py-2 flex items-center justify-between hover:bg-red-50 transition-colors duration-200 text-left"
-                                            >
-                                                <span className="text-sm text-gray-700">{subcategory.name}</span>
-                                                {openSubcategory === subKey ?
-                                                    <ChevronUp className="h-4 w-4 text-gray-400" /> :
-                                                    <ChevronDown className="h-4 w-4 text-gray-400" />
-                                                }
-                                            </button>
-                                           
-                                            {/* Resources List */}
-                                            {openSubcategory === subKey && (
-                                                <div className="bg-gray-50 px-6 py-3">
-                                                    {subcategory.resources.map((resource) => (
-                                                        <a
-                                                            key={resource.id}
-                                                            href={resource.url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="block py-2 group"
-                                                        >
-                                                            <div className="flex items-start">
-                                                                <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-red-500 mt-1 mr-2 flex-shrink-0" />
-                                                                <div>
-                                                                    <h3 className="text-sm font-medium text-gray-900 group-hover:text-red-600">
-                                                                        {resource.name}
-                                                                    </h3>
-                                                                    <p className="text-sm text-gray-500 group-hover:text-red-500">
-                                                                        {resource.description}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    ))}
-                                                </div>
-                                            )}
+                        ))}
+                    </div>
+                </div>
+
+                {/* Resources Display */}
+                <div className="space-y-12">
+                    {filterResources(CATEGORIES).map((category) => (
+                        <div key={category.id} className="space-y-8">
+                            <h2 className="text-2xl font-bold text-gray-900">{category.name}</h2>
+                            
+                            {category.sections.map((section, idx) => (
+                                <div key={idx} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-4">
+                                            {section.title}
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {section.resources.map((resource, resourceIdx) => (
+                                                <a
+                                                    key={resourceIdx}
+                                                    href={resource.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="block group"
+                                                >
+                                                    <div className="flex items-start space-x-3">
+                                                        <div className="flex-shrink-0 mt-1">
+                                                            <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-red-500 transition-colors duration-200" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="text-gray-900 font-medium group-hover:text-red-600 transition-colors duration-200">
+                                                                {resource.name}
+                                                            </h4>
+                                                            <p className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-200">
+                                                                {resource.description}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            ))}
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
-                            )}
+                            ))}
                         </div>
                     ))}
                 </div>
 
-                {/* Original Resource Links */}
-                {values.map(resTree => (
-                    <a
-                        key={resTree.id}
-                        className={linkPillStyle}
-                        href={`#${resTree.id}`}
-                    >
-                        {resTree.title}
-                    </a>
-                ))}
-               
-                {Array.isArray(disValues) && (
-                    <Link href="/resources">
-                        <a className={linkPillStyle}>See more resources</a>
+                {/* Bottom CTA */}
+                <div className="text-center mt-16">
+                    <p className="text-gray-600 mb-4">Don't see what you're looking for?</p>
+                    <Link href="/suggest">
+                        <a className="text-red-600 font-semibold hover:text-red-500 transition-colors duration-200">
+                            Suggest a new resource →
+                        </a>
                     </Link>
-                )}
-            </section>
-
-            {/* Resource Sections */}
-            {values.map(resourceTree => (
-                <section key={resourceTree.id} id={resourceTree.id} className="mt-8">
-                    <h2 className="font-display text-2xl font-semibold text-gray-800">
-                        {resourceTree.title}
-                    </h2>
-                    <ul className="divide-y divide-gray-300 mt-2">
-                        {resourceTree.resources.map(resource => (
-                            <li key={resource.id} className="py-3">
-                                <a className="group" href={resource.url} target="_blank">
-                                    <h2 className="text-base font-medium text-gray-800 group-hover:text-red-600 group-focus:text-red-600">
-                                        {resource.name}
-                                    </h2>
-                                    <p className="text-gray-500 group-hover:text-red-600 group-focus:text-red-600 text-sm">
-                                        {resource.description}
-                                    </p>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            ))}
+                </div>
+            </div>
         </div>
-    </>
-}
+    );
+};
 
-export default Resources
+export default Resources;

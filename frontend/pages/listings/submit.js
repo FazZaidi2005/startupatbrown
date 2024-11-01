@@ -4,9 +4,13 @@ import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase-config";
 import { useRouter } from "next/router";
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
 const SubmitListing = () => {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         companyName: "",
         positionType: "",
@@ -14,17 +18,14 @@ const SubmitListing = () => {
         timeCommitment: "",
         duration: "",
         contactInfo: "",
-        additionalNotes: "",
+        additionalNotes: ""
     });
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+
+    const positionTypes = ["Co-founder", "Internship", "Tech help", "Design help"];
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const validateForm = () => {
@@ -46,194 +47,217 @@ const SubmitListing = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setError(null);
-        
+        setError("");
+
         try {
             validateForm();
             
             const listingData = {
                 ...formData,
-                datePosted: new Date(),
+                datePosted: new Date()
             };
-            
+
             await addDoc(collection(db, "listings"), listingData);
-            
-            alert("Listing successfully added!");
-            router.push('/listings');
+            setSubmitted(true);
         } catch (error) {
             setError(error.message || "Error adding listing. Please try again.");
-            console.error("Error adding listing: ", error);
+            console.error("Error adding listing:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const positionTypes = ["Co-founder", "Internship", "Tech help", "Design help"];
-
     return (
-        <>
+        <div className="min-h-screen bg-gray-50">
             <Head>
-                <title>Submit Listing | Venture@Brown</title>
-                <meta name="description" content="Submit a new opportunity listing" />
+                <title>Post an Opportunity | Venture@Brown</title>
             </Head>
-            
-            <div className="max-w-4xl mx-auto px-4 my-12 sm:my-24">
+
+            <div className="max-w-3xl mx-auto px-4 py-12">
                 <Navbar />
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-12">
-                    <button
-                        onClick={() => router.push('/listings')}
-                        className="inline-flex items-center text-lg font-semibold text-blue-600 hover:text-blue-700 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg px-2 py-1"
-                        aria-label="Return to listings page"
-                    >
-                        ← Back to Listings
-                    </button>
-                    <h1 className="text-5xl font-bold text-gray-900 font-display">Submit Listing</h1>
-                </div>
 
-                <div className="bg-white rounded-2xl shadow-lg p-8">
-                    {error && (
-                        <div className="mb-8 p-4 bg-red-50 border-2 border-red-200 text-red-700 text-lg rounded-xl" role="alert">
-                            {error}
-                        </div>
-                    )}
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="space-y-3">
-                            <label htmlFor="companyName" className="block text-xl font-semibold text-gray-700">
-                                Company Name*
-                            </label>
-                            <input
-                                id="companyName"
-                                type="text"
-                                name="companyName"
-                                value={formData.companyName}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm"
-                                placeholder="Enter your company name"
-                                aria-required="true"
-                            />
-                        </div>
+                <button
+                    onClick={() => router.push('/listings')}
+                    className="inline-flex items-center text-red-600 hover:text-red-500 font-medium mt-12"
+                >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Listings
+                </button>
 
-                        <div className="space-y-3">
-                            <label htmlFor="positionType" className="block text-xl font-semibold text-gray-700">
-                                Position Type*
-                            </label>
-                            <select
-                                id="positionType"
-                                name="positionType"
-                                value={formData.positionType}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm"
-                                aria-required="true"
-                            >
-                                <option value="">Select a position type</option>
-                                {positionTypes.map(type => (
-                                    <option key={type} value={type}>{type}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="space-y-3">
-                            <label htmlFor="jobDescription" className="block text-xl font-semibold text-gray-700">
-                                Job Description*
-                            </label>
-                            <textarea
-                                id="jobDescription"
-                                name="jobDescription"
-                                value={formData.jobDescription}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm h-48"
-                                placeholder="Describe the role and responsibilities"
-                                aria-required="true"
-                            />
-                            <p className="text-sm text-gray-500">
-                                Provide a detailed description of the role, responsibilities, and requirements.
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                            <div className="space-y-3">
-                                <label htmlFor="timeCommitment" className="block text-xl font-semibold text-gray-700">
-                                    Time Commitment*
-                                </label>
-                                <input
-                                    id="timeCommitment"
-                                    type="text"
-                                    name="timeCommitment"
-                                    value={formData.timeCommitment}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm"
-                                    placeholder="e.g., Full-time, Part-time"
-                                    aria-required="true"
-                                />
+                <div className="mt-8">
+                    {submitted ? (
+                        <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                </svg>
                             </div>
-
-                            <div className="space-y-3">
-                                <label htmlFor="duration" className="block text-xl font-semibold text-gray-700">
-                                    Duration
-                                </label>
-                                <input
-                                    id="duration"
-                                    type="text"
-                                    name="duration"
-                                    value={formData.duration}
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm"
-                                    placeholder="e.g., 3 months, 6 months"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-3">
-                            <label htmlFor="contactInfo" className="block text-xl font-semibold text-gray-700">
-                                Contact Information*
-                            </label>
-                            <input
-                                id="contactInfo"
-                                type="text"
-                                name="contactInfo"
-                                value={formData.contactInfo}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm"
-                                placeholder="Email or phone number"
-                                aria-required="true"
-                            />
-                            <p className="text-sm text-gray-500">
-                                Enter an email address or phone number where applicants can reach you.
+                            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                                Thank you for posting!
+                            </h2>
+                            <p className="text-gray-600 mb-8">
+                                Your opportunity listing has been submitted successfully.
                             </p>
-                        </div>
-
-                        <div className="space-y-3">
-                            <label htmlFor="additionalNotes" className="block text-xl font-semibold text-gray-700">
-                                Additional Notes
-                            </label>
-                            <textarea
-                                id="additionalNotes"
-                                name="additionalNotes"
-                                value={formData.additionalNotes}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent shadow-sm h-32"
-                                placeholder="Any additional information"
-                            />
-                            <p className="text-sm text-gray-500">
-                                Optional: Include any additional details or requirements.
-                            </p>
-                        </div>
-
-                        <div className="pt-6">
-                            <p className="text-sm text-gray-500 mb-4">* Required fields</p>
                             <button
-                                type="submit"
-                                className="w-full px-6 py-4 bg-red-600 text-white text-xl font-semibold rounded-xl hover:bg-red-500 transition-all duration-200 shadow-sm hover:shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
-                                disabled={isLoading}
-                                aria-label={isLoading ? "Submitting listing..." : "Submit listing"}
+                                onClick={() => router.push('/listings')}
+                                className="text-red-600 font-semibold hover:text-red-500"
                             >
-                                {isLoading ? "Submitting..." : "Submit Listing"}
+                                ← Return to Listings
                             </button>
                         </div>
-                    </form>
+                    ) : (
+                        <>
+                            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                                Post an Opportunity
+                            </h1>
+                            <p className="text-lg text-gray-600 mb-8">
+                                Share your job or internship opportunity with the Brown entrepreneurship community.
+                            </p>
+
+                            {error && (
+                                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4 mb-6">
+                                    {error}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-8 space-y-6">
+                                <div className="space-y-2">
+                                    <label htmlFor="companyName" className="block text-gray-700 font-medium">
+                                        Company Name <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        id="companyName"
+                                        name="companyName"
+                                        type="text"
+                                        value={formData.companyName}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Enter company name"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="positionType" className="block text-gray-700 font-medium">
+                                        Position Type <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        id="positionType"
+                                        name="positionType"
+                                        value={formData.positionType}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                    >
+                                        <option value="">Select a position type</option>
+                                        {positionTypes.map(type => (
+                                            <option key={type} value={type}>{type}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="jobDescription" className="block text-gray-700 font-medium">
+                                        Job Description <span className="text-red-500">*</span>
+                                    </label>
+                                    <textarea
+                                        id="jobDescription"
+                                        name="jobDescription"
+                                        value={formData.jobDescription}
+                                        onChange={handleChange}
+                                        required
+                                        rows={4}
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Describe the role and responsibilities"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="timeCommitment" className="block text-gray-700 font-medium">
+                                        Time Commitment <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        id="timeCommitment"
+                                        name="timeCommitment"
+                                        type="text"
+                                        value={formData.timeCommitment}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="e.g., Full-time, Part-time"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="duration" className="block text-gray-700 font-medium">
+                                        Duration
+                                    </label>
+                                    <input
+                                        id="duration"
+                                        name="duration"
+                                        type="text"
+                                        value={formData.duration}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="e.g., 3 months, 6 months"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+    <label htmlFor="contactInfo" className="block text-gray-700 font-medium">
+        Contact Information (Email) <span className="text-red-500">*</span>
+    </label>
+    <input
+        id="contactInfo"
+        name="contactInfo"
+        type="email"  // Updated to enforce email format
+        value={formData.contactInfo}
+        onChange={handleChange}
+        required
+        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+        placeholder="Enter a valid email address"
+    />
+</div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="additionalNotes" className="block text-gray-700 font-medium">
+                                        Additional Notes
+                                    </label>
+                                    <textarea
+                                        id="additionalNotes"
+                                        name="additionalNotes"
+                                        value={formData.additionalNotes}
+                                        onChange={handleChange}
+                                        rows={4}
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Any additional information or requirements"
+                                    />
+                                </div>
+
+                                <div className="flex justify-end pt-4">
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="inline-flex items-center px-6 py-3 text-white bg-red-600 rounded-lg font-medium
+                                                 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+                                                 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                                Submitting...
+                                            </>
+                                        ) : (
+                                            "Submit Listing"
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </>
+                    )}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -12,19 +12,48 @@ const firebaseConfig = {
     measurementId: "G-SW2QH9HH46"
 };
 
-// Initialize Firebase app if it hasn't been initialized already
+// Initialize Firebase
 let app;
 let analytics;
+let db;
 
-if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-    if (typeof window !== 'undefined') {
-        analytics = getAnalytics(app); // Only call analytics in a browser environment
+try {
+    if (!getApps().length) {
+        app = initializeApp(firebaseConfig);
+        
+        // Only initialize analytics in browser environment and production
+        if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+            analytics = getAnalytics(app);
+        }
+    } else {
+        app = getApps()[0];
     }
-} else {
-    app = getApps()[0]; // Use the already initialized app
+    
+    db = getFirestore(app);
+} catch (error) {
+    console.error("Error initializing Firebase:", error);
 }
 
-const db = getFirestore(app);
+// Helper function for creating suggestions
+export const createSuggestion = async (suggestionData) => {
+    if (!db) {
+        console.error("Firestore is not initialized");
+        return { success: false, error: "Firestore not initialized" };
+    }
+    
+    try {
+        const suggestionsRef = collection(db, "resourceSuggestions");
+        const docRef = await addDoc(suggestionsRef, {
+            ...suggestionData,
+            createdAt: new Date(),
+            status: "pending",
+            environment: process.env.NODE_ENV || 'development'
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error("Error creating suggestion:", error);
+        return { success: false, error: error.message };
+    }
+};
 
 export { db, analytics };

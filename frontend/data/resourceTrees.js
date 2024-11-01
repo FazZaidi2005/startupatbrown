@@ -1,3 +1,5 @@
+// Not in use, but good to have a list of all the resources.
+
 export const resourceTrees = {
     "studentVcs":{
         "resources":[
