@@ -14,14 +14,17 @@ export default function Navbar({ isLanding }) {
                 <Link href="/about">
                     <a className={linkStyling}>About</a>
                 </Link>
-                <Link href="/resources">
-                    <a className={linkStyling}>Resources</a>
+                <Link href="/events">
+                    <a className={linkStyling}>Events</a>
                 </Link>
                 <Link href="/listings">
                     <a className={linkStyling}>Opportunities</a>
                 </Link>
+                <Link href="/resources">
+                    <a className={linkStyling}>Resources</a>
+                </Link>
                 <Link href="/contact">
-                    <a className={linkStyling}>Contact</a>
+                    <a className={linkStyling}>Join Us</a>
                 </Link>
             </div>
         </div>

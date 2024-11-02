@@ -35,14 +35,14 @@ const About = () => {
                     </div>
 
                     {/* Tabs Overview Section */}
-                    <div className="grid gap-8 md:grid-cols-3">
-                        <Link href="/resources">
+                    <div className="grid gap-8 md:grid-cols-4">
+                        <Link href="/events">
                             <a className="block p-8 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 hover:bg-red-50">
                                 <h3 className="text-3xl font-semibold text-red-600 mb-4">
-                                    Venture Resources
+                                    Events
                                 </h3>
                                 <p className="text-gray-600">
-                                    Access a wide range of resources to help you launch and grow your venture, from seed funding to mentorship and venture support.
+                                    Stay updated with the latest events, workshops, and networking opportunities happening at Brown and RISD.
                                 </p>
                             </a>
                         </Link>
@@ -58,16 +58,48 @@ const About = () => {
                             </a>
                         </Link>
 
+                        <Link href="/resources">
+                            <a className="block p-8 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 hover:bg-red-50">
+                                <h3 className="text-3xl font-semibold text-red-600 mb-4">
+                                    Venture Resources
+                                </h3>
+                                <p className="text-gray-600">
+                                    Access a wide range of resources to help you launch and grow your venture, from seed funding to mentorship and venture support.
+                                </p>
+                            </a>
+                        </Link>
+
                         <Link href="/contact">
                             <a className="block p-8 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 hover:bg-red-50">
                                 <h3 className="text-3xl font-semibold text-red-600 mb-4">
-                                    Contact
+                                    Join Us
                                 </h3>
                                 <p className="text-gray-600">
                                     Reach out to us for support, guidance, or to learn more about how we can help you succeed in your entrepreneurial journey.
                                 </p>
                             </a>
                         </Link>
+                    </div>
+
+                    {/* Testimonials Section */}
+                    <div className="bg-white p-10 rounded-lg shadow-sm max-w-5xl mx-auto mt-16">
+                        <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+                            Voices From Our Ventures
+                        </h2>
+                        <div className="space-y-8">
+                            <div className="text-lg text-gray-700 leading-relaxed">
+                                <p className="mb-4">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin tincidunt libero, sed facilisis magna tempus et."</p>
+                                <p className="font-semibold text-gray-900">- Alex R., Class of 2025</p>
+                            </div>
+                            <div className="text-lg text-gray-700 leading-relaxed">
+                                <p className="mb-4">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vehicula sapien at nulla ullamcorper, ac lacinia ligula molestie."</p>
+                                <p className="font-semibold text-gray-900">- Jamie L., Class of 2026</p>
+                            </div>
+                            <div className="text-lg text-gray-700 leading-relaxed">
+                                <p className="mb-4">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam pretium, velit quis tincidunt facilisis, nisi arcu facilisis est, vel tempor orci justo a urna."</p>
+                                <p className="font-semibold text-gray-900">- Morgan T., RISD Class of 2024</p>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Nelson Center for Entrepreneurship Link */}

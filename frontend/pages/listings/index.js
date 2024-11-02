@@ -19,16 +19,17 @@ const Listings = () => {
         const fetchListings = async () => {
             try {
                 setIsLoading(true);
+                // Change collection to "opportunityListings"
                 const listingsQuery = query(
-                    collection(db, "listings"),
-                    orderBy("datePosted", "desc"),
+                    collection(db, "opportunityListings"),
+                    orderBy("createdAt", "desc"), // Updated to use "createdAt" since "datePosted" doesn't exist
                     limit(50)
                 );
                 const querySnapshot = await getDocs(listingsQuery);
                 const data = querySnapshot.docs.map(doc => ({
                     ...doc.data(),
                     id: doc.id,
-                    datePosted: doc.data().datePosted?.toDate() || new Date()
+                    createdAt: doc.data().createdAt?.toDate() || new Date()
                 }));
                 setListings(data);
             } catch (err) {
@@ -51,6 +52,21 @@ const Listings = () => {
         return matchesFilter && matchesSearch;
     });
 
+    const getPositionTypeColor = (positionType) => {
+        switch (positionType) {
+            case "Co-founder":
+                return "bg-orange-100";
+            case "Internship":
+                return "bg-green-100";
+            case "Tech help":
+                return "bg-purple-100";
+            case "Design help":
+                return "bg-yellow-100";
+            default:
+                return "bg-gray-100";
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Head>
@@ -66,7 +82,7 @@ const Listings = () => {
                         Venture Opportunities
                     </h1>
                     <p className="text-xl text-gray-600 mb-8">
-                        Connect with Brown startups and find impactful opportunities.
+                        Connect with Brown startups and find impactful opportunities
                     </p>
                     <Link href="/listings/submit">
                         <a className="inline-flex items-center space-x-2 bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-500 transition-colors duration-200">
@@ -115,7 +131,7 @@ const Listings = () => {
                 </div>
 
                 {/* Listings Display */}
-                <div className="space-y-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                     {isLoading ? (
                         <div className="text-center py-12">Loading...</div>
                     ) : (
@@ -125,13 +141,13 @@ const Listings = () => {
                                     <div className="flex justify-between items-center">
                                         <h3 className="text-xl font-semibold text-gray-900">{listing.companyName}</h3>
                                         <span className="text-sm text-gray-500">
-                                            {new Date(listing.datePosted).toLocaleDateString()}
+                                            {new Date(listing.createdAt).toLocaleDateString()}
                                         </span>
                                     </div>
-                                    <div className="flex gap-4 text-gray-600 text-sm my-2">
-                                        <span>{listing.positionType}</span>
-                                        <span>{listing.timeCommitment}</span>
-                                        <span>{listing.duration}</span>
+                                    <div className="flex gap-4 text-sm my-2">
+                                        <span className={`px-3 py-1 rounded-full ${getPositionTypeColor(listing.positionType)}`}>{listing.positionType}</span>
+                                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600">{listing.timeCommitment}</span>
+                                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600">{listing.duration}</span>
                                     </div>
                                     
                                     {selectedListing?.id === listing.id && (

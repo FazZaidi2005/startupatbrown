@@ -1,4 +1,5 @@
 import '../styles.css';
+// Remove FullCalendar CSS imports as we'll handle styles in styles.css
 import Head from "next/head";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,16 +23,27 @@ function MyApp({ Component, pageProps }) {
         <div className="app-container">
             <Head>
                 <title>Venture@Brown</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <link 
+                    rel="stylesheet" 
+                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+                />
             </Head>
 
-            {/* Smooth Page Transitions */}
-            <AnimatePresence exitBeforeEnter>
+            <AnimatePresence
+                mode="wait"
+                initial={false}
+                onExitComplete={() => window.scrollTo(0, 0)}
+            >
                 <motion.div
                     key={router.route}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    transition={{ 
+                        duration: 0.3, 
+                        ease: [0.4, 0, 0.2, 1] 
+                    }}
                 >
                     <Component {...pageProps} />
                 </motion.div>

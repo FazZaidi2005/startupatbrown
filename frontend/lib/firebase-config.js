@@ -12,7 +12,6 @@ const firebaseConfig = {
     measurementId: "G-SW2QH9HH46"
 };
 
-// Initialize Firebase
 let app;
 let analytics;
 let db;
@@ -20,38 +19,59 @@ let db;
 try {
     if (!getApps().length) {
         app = initializeApp(firebaseConfig);
-        
-        // Only initialize analytics in browser environment and production
         if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
             analytics = getAnalytics(app);
         }
     } else {
         app = getApps()[0];
     }
-    
     db = getFirestore(app);
 } catch (error) {
     console.error("Error initializing Firebase:", error);
 }
 
-// Helper function for creating suggestions
-export const createSuggestion = async (suggestionData) => {
-    if (!db) {
-        console.error("Firestore is not initialized");
-        return { success: false, error: "Firestore not initialized" };
-    }
-    
+// Helper functions for each collection
+export const createJoinUsSubmission = async (data) => {
+    if (!db) return { success: false, error: "Firestore not initialized" };
     try {
-        const suggestionsRef = collection(db, "resourceSuggestions");
-        const docRef = await addDoc(suggestionsRef, {
-            ...suggestionData,
+        const docRef = await addDoc(collection(db, "joinUsSubmissions"), {
+            ...data,
             createdAt: new Date(),
-            status: "pending",
-            environment: process.env.NODE_ENV || 'development'
+            status: "pending"
         });
         return { success: true, id: docRef.id };
     } catch (error) {
-        console.error("Error creating suggestion:", error);
+        console.error("Error creating join us submission:", error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const createResourceSuggestion = async (data) => {
+    if (!db) return { success: false, error: "Firestore not initialized" };
+    try {
+        const docRef = await addDoc(collection(db, "resourceSuggestions"), {
+            ...data,
+            createdAt: new Date(),
+            status: "pending"
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error("Error creating resource suggestion:", error);
+        return { success: false, error: error.message };
+    }
+};
+
+export const createOpportunityListing = async (data) => {
+    if (!db) return { success: false, error: "Firestore not initialized" };
+    try {
+        const docRef = await addDoc(collection(db, "opportunityListings"), {
+            ...data,
+            createdAt: new Date(),
+            status: "pending"
+        });
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error("Error creating opportunity listing:", error);
         return { success: false, error: error.message };
     }
 };

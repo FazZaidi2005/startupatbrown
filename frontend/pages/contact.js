@@ -1,29 +1,42 @@
 import { useState } from "react";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
-import { createSuggestion } from "../lib/firebase-config"; // Make sure this handles Firestore submission
+import { createJoinUsSubmission } from "../lib/firebase-config";
 import { Loader2 } from 'lucide-react';
 
 const Contact = () => {
-    const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+    const [formData, setFormData] = useState({ 
+        name: "", 
+        email: "", 
+        message: "", 
+        ventureName: "", 
+        ideaDescription: "", 
+        yearAtBrownOrRISD: "", 
+        affiliation: "" 
+    });
     const [isLoading, setIsLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState("");
-    const [highlightedField, setHighlightedField] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        if (highlightedField === name) {
-            setHighlightedField(null);
-        }
+        setFormData(prev => ({ ...prev, [name]: value }));
+        setError("");
     };
 
     const validateForm = () => {
-        if (!formData.name) return { valid: false, field: "name" };
-        if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return { valid: false, field: "email" };
-        if (!formData.message) return { valid: false, field: "message" };
-        return { valid: true };
+        const requiredFields = ['name', 'email', 'ventureName', 'ideaDescription', 'yearAtBrownOrRISD', 'affiliation'];
+        for (const field of requiredFields) {
+            if (!formData[field]?.trim()) {
+                throw new Error(`Please fill out the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field`);
+            }
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            throw new Error('Please enter a valid email address');
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -31,24 +44,16 @@ const Contact = () => {
         setIsLoading(true);
         setError("");
 
-        const validation = validateForm();
-        if (!validation.valid) {
-            setHighlightedField(validation.field);
-            document.getElementById(validation.field).scrollIntoView({ behavior: "smooth", block: "center" });
-            setIsLoading(false);
-            return;
-        }
-
         try {
-            const response = await createSuggestion({ ...formData, type: "contact_message" });
+            validateForm();
+            const response = await createJoinUsSubmission(formData);
             if (response.success) {
                 setSubmitted(true);
             } else {
-                setError("Failed to submit. Please try again later.");
+                throw new Error(response.error || "Failed to submit form");
             }
         } catch (error) {
-            setError("An error occurred. Please try again later.");
-            console.error("Error submitting contact message:", error);
+            setError(error.message);
         } finally {
             setIsLoading(false);
         }
@@ -57,19 +62,18 @@ const Contact = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             <Head>
-                <title>Contact Us | Venture@Brown</title>
+                <title>Join Us | Venture@Brown</title>
             </Head>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <Navbar />
 
-                {/* Hero Section */}
                 <div className="text-center max-w-3xl mx-auto mt-16 mb-12">
                     <h1 className="text-5xl font-bold text-gray-900 font-display mb-6">
-                        Contact Us
+                        Join Us
                     </h1>
                     <p className="text-xl text-gray-600 mb-8">
-                        Have questions or feedback? Let us know, and we’ll get back to you as soon as possible.
+                        Are you working on a new venture? Reach out to us for support or guidance from the Brown EP Venture Team.
                     </p>
                 </div>
 
@@ -82,10 +86,10 @@ const Contact = () => {
                                 </svg>
                             </div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                                Thank you for contacting us!
+                                Thank you for reaching out to us!
                             </h2>
                             <p className="text-gray-600 mb-8">
-                                We have received your message and will get back to you shortly.
+                                We have received your request and will get back to you shortly.
                             </p>
                         </div>
                     ) : (
@@ -107,11 +111,8 @@ const Contact = () => {
                                         type="text"
                                         value={formData.name}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 rounded-lg border ${
-                                            highlightedField === "name"
-                                                ? "border-blue-500 focus:ring-2 focus:ring-blue-500"
-                                                : "border-gray-200 focus:ring-2 focus:ring-red-200"
-                                        } transition-all duration-200`}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
                                         placeholder="Your name"
                                     />
                                 </div>
@@ -126,31 +127,73 @@ const Contact = () => {
                                         type="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 rounded-lg border ${
-                                            highlightedField === "email"
-                                                ? "border-blue-500 focus:ring-2 focus:ring-blue-500"
-                                                : "border-gray-200 focus:ring-2 focus:ring-red-200"
-                                        } transition-all duration-200`}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
                                         placeholder="Your email"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label htmlFor="message" className="block text-gray-700 font-medium">
-                                        Message <span className="text-red-500">*</span>
+                                    <label htmlFor="ventureName" className="block text-gray-700 font-medium">
+                                        Venture Name <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        id="ventureName"
+                                        name="ventureName"
+                                        type="text"
+                                        value={formData.ventureName}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Your venture name"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="ideaDescription" className="block text-gray-700 font-medium">
+                                        Brief Description of Your Idea <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
-                                        id="message"
-                                        name="message"
-                                        value={formData.message}
+                                        id="ideaDescription"
+                                        name="ideaDescription"
+                                        value={formData.ideaDescription}
                                         onChange={handleChange}
+                                        required
                                         rows={4}
-                                        className={`w-full px-4 py-3 rounded-lg border ${
-                                            highlightedField === "message"
-                                                ? "border-blue-500 focus:ring-2 focus:ring-blue-500"
-                                                : "border-gray-200 focus:ring-2 focus:ring-red-200"
-                                        } transition-all duration-200`}
-                                        placeholder="How can we help you?"
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Tell us about your idea"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="yearAtBrownOrRISD" className="block text-gray-700 font-medium">
+                                        Year at Brown or RISD <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        id="yearAtBrownOrRISD"
+                                        name="yearAtBrownOrRISD"
+                                        type="text"
+                                        value={formData.yearAtBrownOrRISD}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="e.g., Sophomore, Junior"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label htmlFor="affiliation" className="block text-gray-700 font-medium">
+                                        Are you affiliated with Brown or RISD? <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        id="affiliation"
+                                        name="affiliation"
+                                        type="text"
+                                        value={formData.affiliation}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="e.g., Brown, RISD"
                                     />
                                 </div>
 

@@ -1,9 +1,8 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Link from "next/link";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../lib/firebase-config";
+import { createResourceSuggestion } from "../lib/firebase-config";
 import { useRouter } from "next/router";
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -11,19 +10,13 @@ const Suggest = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         url: "",
         category: "",
         description: ""
     });
-    const [highlightField, setHighlightField] = useState("");
-
-    // Refs for each field to scroll to if validation fails
-    const nameRef = useRef(null);
-    const urlRef = useRef(null);
-    const categoryRef = useRef(null);
-    const descriptionRef = useRef(null);
 
     const categories = [
         "Internships & Fellowships",
@@ -37,53 +30,39 @@ const Suggest = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        setHighlightField(""); // Remove highlight on input change
+        setFormData(prev => ({ ...prev, [name]: value }));
+        setError("");
     };
 
     const validateForm = () => {
-        if (!formData.name.trim()) {
-            setHighlightField("name");
-            nameRef.current.scrollIntoView({ behavior: "smooth" });
-            throw new Error("Validation failed");
-        }
-        if (!formData.url.trim()) {
-            setHighlightField("url");
-            urlRef.current.scrollIntoView({ behavior: "smooth" });
-            throw new Error("Validation failed");
-        }
-        if (!formData.category.trim()) {
-            setHighlightField("category");
-            categoryRef.current.scrollIntoView({ behavior: "smooth" });
-            throw new Error("Validation failed");
-        }
-        if (!formData.description.trim()) {
-            setHighlightField("description");
-            descriptionRef.current.scrollIntoView({ behavior: "smooth" });
-            throw new Error("Validation failed");
+        const requiredFields = ['name', 'url', 'category', 'description'];
+        for (const field of requiredFields) {
+            if (!formData[field]?.trim()) {
+                throw new Error(`Please fill out the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field`);
+            }
         }
 
         // Add https:// if missing
-        if (!formData.url.startsWith("http://") && !formData.url.startsWith("https://")) {
+        if (!formData.url.startsWith('http://') && !formData.url.startsWith('https://')) {
             formData.url = `https://${formData.url}`;
         }
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         setIsLoading(true);
+        setError("");
 
         try {
             validateForm();
-            const submissionData = {
-                ...formData,
-                createdAt: new Date(),
-                status: "pending"
-            };
-            await addDoc(collection(db, "resourceSuggestions"), submissionData);
-            setSubmitted(true);
+            const response = await createResourceSuggestion(formData);
+            if (response.success) {
+                setSubmitted(true);
+            } else {
+                throw new Error(response.error || "Failed to submit suggestion");
+            }
         } catch (error) {
-            console.error("Validation error:", error.message);
+            setError(error.message);
         } finally {
             setIsLoading(false);
         }
@@ -134,6 +113,12 @@ const Suggest = () => {
                                 Help us grow our directory by suggesting valuable resources for the Brown entrepreneurship community.
                             </p>
 
+                            {error && (
+                                <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-4 mb-6">
+                                    {error}
+                                </div>
+                            )}
+
                             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-8 space-y-6">
                                 <div className="space-y-2">
                                     <label htmlFor="name" className="block text-gray-700 font-medium">
@@ -143,10 +128,10 @@ const Suggest = () => {
                                         id="name"
                                         name="name"
                                         type="text"
-                                        ref={nameRef}
                                         value={formData.name}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 rounded-lg border ${highlightField === "name" ? "border-blue-500" : "border-gray-200"} focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200`}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
                                         placeholder="e.g., Brown Venture Fellowship"
                                     />
                                 </div>
@@ -159,10 +144,10 @@ const Suggest = () => {
                                         id="url"
                                         name="url"
                                         type="text"
-                                        ref={urlRef}
                                         value={formData.url}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 rounded-lg border ${highlightField === "url" ? "border-blue-500" : "border-gray-200"} focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200`}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
                                         placeholder="example.com"
                                     />
                                 </div>
@@ -174,13 +159,13 @@ const Suggest = () => {
                                     <select
                                         id="category"
                                         name="category"
-                                        ref={categoryRef}
                                         value={formData.category}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 rounded-lg border ${highlightField === "category" ? "border-blue-500" : "border-gray-200"} focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200`}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
                                     >
                                         <option value="">Select a category</option>
-                                        {categories.map((category) => (
+                                        {categories.map(category => (
                                             <option key={category} value={category}>
                                                 {category}
                                             </option>
@@ -195,12 +180,12 @@ const Suggest = () => {
                                     <textarea
                                         id="description"
                                         name="description"
-                                        ref={descriptionRef}
                                         value={formData.description}
                                         onChange={handleChange}
+                                        required
                                         rows={4}
-                                        className={`w-full px-4 py-3 rounded-lg border ${highlightField === "description" ? "border-blue-500" : "border-gray-200"} focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200`}
-                                        placeholder="Please provide a brief description of this resource and how it helps Brown entrepreneurs..."
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Please provide a brief description of this resource..."
                                     />
                                 </div>
 

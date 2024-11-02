@@ -1,8 +1,7 @@
 import Head from "next/head";
 import Navbar from "../../components/Navbar";
 import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../lib/firebase-config";
+import { createOpportunityListing } from "../../lib/firebase-config";
 import { useRouter } from "next/router";
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -26,6 +25,7 @@ const SubmitListing = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        setError("");
     };
 
     const validateForm = () => {
@@ -52,16 +52,14 @@ const SubmitListing = () => {
         try {
             validateForm();
             
-            const listingData = {
-                ...formData,
-                datePosted: new Date()
-            };
-
-            await addDoc(collection(db, "listings"), listingData);
-            setSubmitted(true);
+            const response = await createOpportunityListing(formData);
+            if (response.success) {
+                setSubmitted(true);
+            } else {
+                throw new Error(response.error || "Failed to submit listing");
+            }
         } catch (error) {
-            setError(error.message || "Error adding listing. Please try again.");
-            console.error("Error adding listing:", error);
+            setError(error.message);
         } finally {
             setIsLoading(false);
         }
@@ -204,20 +202,20 @@ const SubmitListing = () => {
                                 </div>
 
                                 <div className="space-y-2">
-    <label htmlFor="contactInfo" className="block text-gray-700 font-medium">
-        Contact Information (Email) <span className="text-red-500">*</span>
-    </label>
-    <input
-        id="contactInfo"
-        name="contactInfo"
-        type="email"  // Updated to enforce email format
-        value={formData.contactInfo}
-        onChange={handleChange}
-        required
-        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
-        placeholder="Enter a valid email address"
-    />
-</div>
+                                    <label htmlFor="contactInfo" className="block text-gray-700 font-medium">
+                                        Contact Information (Email) <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        id="contactInfo"
+                                        name="contactInfo"
+                                        type="email"
+                                        value={formData.contactInfo}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-200 focus:border-red-500 transition-all duration-200"
+                                        placeholder="Enter a valid email address"
+                                    />
+                                </div>
 
                                 <div className="space-y-2">
                                     <label htmlFor="additionalNotes" className="block text-gray-700 font-medium">

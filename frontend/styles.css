@@ -1,58 +1,181 @@
 /* purgecss start ignore */
-@tailwind  base;
-@tailwind  components;
+@tailwind base;
+@tailwind components;
 
 html {
     scroll-behavior: smooth;
 }
 
-
 button:focus {
-    @apply outline-none
+    outline: none; /* No need to use @apply since only one rule */
 }
 
 .surveyButton {
-    @apply p-3 rounded-lg hover:text-red-700 hover:bg-red-50 transition-all duration-300 text-xl text-gray-600
-
+    @apply p-3 rounded-lg hover:text-red-700 hover:bg-red-50 transition-all duration-300 text-xl text-gray-600;
 }
 
-.fade-enter {
+.fade-enter,
+.fade-exit {
     opacity: 0;
     transform: translateY(-25%);
 }
-.fade-enter-active {
-    opacity: 1;
-    transform: translateY(0%);
-}
-.fade-exit {
-    opacity: 1;
-    transform: translateY(0%);
-}
-.fade-exit-active {
-    opacity: 0;
-    transform: translateY(25%);
-}
+
 .fade-enter-active,
 .fade-exit-active {
+    opacity: 1;
+    transform: translateY(0%);
     transition: opacity 600ms, transform 600ms;
 }
 
 .red-link {
-    @apply text-red-600 font-bold font-display
+    @apply text-red-600 font-bold font-display;
 }
-.red-link:hover {
-    @apply text-red-500
+.red-link:hover,
+.red-link:focus {
+    @apply text-red-500;
 }
 .red-link:focus {
-    @apply text-red-500 underline
+    @apply underline;
 }
 
 .polyfill-button {
     -webkit-appearance: none;
 }
 .full-height {
-    height: 100vh; /* Fallback for browsers that do not support Custom Properties */
     height: calc(var(--vh, 1vh) * 100);
 }
+
+/* Calendar Styles */
+.fc {
+    @apply font-display;
+}
+
+.fc-toolbar-title {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.fc-button-primary {
+    @apply bg-red-600 border-red-600 hover:bg-red-500 hover:border-red-500 shadow-sm transition-all duration-200;
+    &:disabled {
+        @apply bg-gray-400 border-gray-400 cursor-not-allowed opacity-50;
+    }
+    &:not(:disabled) {
+        @apply cursor-pointer;
+    }
+}
+
+.fc-prev-button,
+.fc-next-button,
+.fc-dayGridMonth-button,
+.fc-timeGridWeek-button,
+.fc-timeGridDay-button,
+.fc-today-button {
+    @apply rounded-lg text-sm font-medium;
+}
+
+.fc-event {
+    @apply bg-red-600 border border-red-700 rounded-md cursor-pointer transition-opacity duration-200;
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.fc-event-title {
+    @apply font-medium text-white px-2 py-1;
+}
+
+.fc-day {
+    @apply transition-colors duration-200;
+    &:hover {
+        @apply bg-gray-50;
+    }
+}
+
+.fc-day-today {
+    @apply bg-red-50;
+    .fc-daygrid-day-number {
+        @apply text-red-600 font-semibold;
+    }
+}
+
+.fc-col-header-cell {
+    @apply bg-gray-50 py-3;
+}
+
+.fc-col-header-cell-cushion {
+    @apply font-semibold text-gray-700;
+}
+
+.fc-timegrid-slot-label {
+    @apply text-gray-600;
+}
+
+.fc-list-day-cushion {
+    @apply bg-gray-50;
+}
+
+/* Calendar Modal */
+.calendar-modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50;
+}
+
+.calendar-modal {
+    @apply fixed inset-0 flex items-center justify-center p-4;
+}
+
+.calendar-modal-content {
+    @apply bg-white rounded-xl p-8 max-w-md w-full shadow-xl z-50;
+}
+
+.calendar-form-group {
+    @apply mb-4;
+}
+
+.calendar-form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.calendar-form-input,
+.calendar-form-textarea {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg transition-colors duration-200;
+}
+
+.calendar-form-textarea {
+    @apply h-24;
+}
+
+.calendar-button-primary {
+    @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500 transition-colors duration-200;
+}
+
+.calendar-button-secondary {
+    @apply text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200;
+}
+
+/* Loading Spinner */
+.calendar-loading {
+    @apply flex items-center justify-center p-12;
+}
+
+.spinner {
+    @apply w-12 h-12 border-4 border-red-600 rounded-full;
+    border-top-color: rgba(0, 0, 0, 0);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error Message */
+.calendar-error {
+    @apply bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4;
+}
+
 /* purgecss end ignore */
-@tailwind  utilities;
+@tailwind utilities;
