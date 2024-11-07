@@ -1,47 +1,48 @@
-<img src="https://firebasestorage.googleapis.com/v0/b/brown-ep.appspot.com/o/readme.png?alt=media&token=a3f9f6a8-8a66-4ac2-bafe-b2e6e098d6a3"/>
+# Startup@Brown
 
-# [Venture @ Brown](https://ventureatbrown.com)
-
-An interactive guide to help Brown and RISD navigate the entrepreneurial resources on College Hill.
+A web platform to help Brown and RISD students navigate entrepreneurial resources on College Hill.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project running on your local machine.
 
+### Prerequisites
 
-### Set up the development enviroment
+Make sure you have:
+- A code editor like [VSCode](https://code.visualstudio.com/) or [WebStorm](https://www.jetbrains.com/webstorm/)
+- [Node.js](https://nodejs.org/en/) installed
 
-Make sure you have a code editor like [VSCode](https://code.visualstudio.com/) or [WebStorm](https://www.jetbrains.com/webstorm/) and [Node.js](https://nodejs.org/en/) installed.
+### Installation
 
-Clone the repo
-
+1. Clone the repo
 ```
-git clone https://github.com/aaronwangj/ventureatbrown.git
+git clone [your-repo-url]
 ```
 
-Navigate into the directory you just cloned and install dependencies.
-
+2. Navigate to the project directory and install dependencies
 ```
-cd ventureatbrown/frontend
-
+cd your-project-name
 npm install
 # or
 yarn install
 ```
 
-Run the local development server and view the site at http://localhost:3000/
+3. Run the development server
 ```
-npm dev
+npm run dev
 # or
 yarn dev
 ```
 
+View the site at http://localhost:3000/
+
 ## Deployment
 
-This site can be deployed anywhere that supports Node.js — we find [Vercel](https://vercel.com/dashboard) to be the easiest.
+This site can be deployed anywhere that supports Node.js — we recommend [Vercel](https://vercel.com/dashboard) for easy deployment.
 
 ## Built With
 
-* [Next.js](https://nextjs.org/) - The React-based web framework used ([Docs](https://nextjs.org/docs), [Tutorial](https://nextjs.org/learn))
-* [Tailwind CSS](https://tailwindcss.com/) - Styling ([Docs](https://tailwindcss.com/docs/installation), [Playground](https://play.tailwindcss.com))
-* Love ❤️
+* [Next.js](https://nextjs.org/) - The React framework used
+* [TailwindCSS](https://tailwindcss.com/) - For styling
+* [Firebase](https://firebase.google.com/) - Database and backend
+* [React](https://reactjs.org/) - Frontend library

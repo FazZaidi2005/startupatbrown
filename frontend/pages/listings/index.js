@@ -82,7 +82,7 @@ const Listings = () => {
                         Venture Opportunities
                     </h1>
                     <p className="text-xl text-gray-600 mb-8">
-                        Connect with Brown startups and find impactful opportunities
+                        Connect with Brown startups and find impactful opportunities.
                     </p>
                     <Link href="/listings/submit">
                         <a className="inline-flex items-center space-x-2 bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-500 transition-colors duration-200">

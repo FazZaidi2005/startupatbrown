@@ -162,7 +162,7 @@ const Events = () => {
                 <div className="text-center max-w-3xl mx-auto mt-16 mb-12">
                     <h1 className="text-5xl font-bold text-gray-900 mb-6">Events Calendar</h1>
                     <p className="text-xl text-gray-600 mb-8">
-                        Stay up to date with entrepreneurship events and opportunities
+                        Stay up to date with entrepreneurship events and opportunities.
                     </p>
                 </div>
 
