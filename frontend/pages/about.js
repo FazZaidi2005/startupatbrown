@@ -31,12 +31,12 @@ const VentureTeam = () => {
                             <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
                                 EP Venture Team
                             </h2>
-                            <p className="text-lg text-gray-600 leading-relaxed">
+                            <p className="text-lg text-gray-600 leading-relaxed text-center">
                                 We are Brown University's premier student-led venture support organization, dedicated to fostering the next generation of entrepreneurs. Our mission is to transform innovative ideas into successful ventures by providing comprehensive support at every stage of the entrepreneurial journey. Through our extensive network of industry experts, investors, and successful founders, we offer personalized guidance, strategic resources, and invaluable connections to help Brown and RISD students build and scale impactful companies. From ideation to market entry, we're committed to being your trusted partner in turning entrepreneurial aspirations into reality.
                             </p>
                         </div>
 
-                        {/* Stats Column - Revised Format */}
+                        {/* Stats Column */}
                         <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col justify-center">
                             <div className="space-y-6">
                                 <div className="border-b border-gray-100 pb-6">
@@ -65,7 +65,7 @@ const VentureTeam = () => {
                             </div>
                             <h3 className="text-2xl font-bold mb-3">Events</h3>
                             <p className="text-white/90 mb-6">
-                                Stay updated with the latest workshops, networking opportunities, and startup events at Brown and RISD.
+                                Stay updated with the latest workshops, networking opportunities, and startup events at Brown.
                             </p>
                             <Link href="/events">
                                 <a className="inline-flex items-center text-white group-hover:translate-x-2 transition-transform">
@@ -105,7 +105,7 @@ const VentureTeam = () => {
                             </div>
                             <h3 className="text-2xl font-bold mb-3">Resources</h3>
                             <p className="text-white/90 mb-6">
-                                Access tools, guides, and comprehensive support to help launch and scale your venture successfully.
+                                Access programs, grants, and comprehensive support to help launch and scale your venture successfully.
                             </p>
                             <Link href="/resources">
                                 <a className="inline-flex items-center text-white group-hover:translate-x-2 transition-transform">
