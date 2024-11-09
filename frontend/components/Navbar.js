@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 
-const Navbar = ({ isLanding }) => {
+const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
-    const linkStyling = `text-gray-500 hover:text-red-600 focus:text-red-500 transition duration-200 ease-in-out`;
+    // Handle window resize and set mobile state
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+            if (window.innerWidth >= 768) {
+                setIsOpen(false);
+            }
+        };
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
+        // Initial check
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const linkStyling = "text-gray-700 hover:text-red-600 focus:text-red-600 transition duration-200 ease-in-out";
 
     const navLinks = [
         { href: "/about", label: "About" },
@@ -22,56 +35,60 @@ const Navbar = ({ isLanding }) => {
     return (
         <nav className="fixed top-0 right-0 w-full bg-white z-50 shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
+                <div className="flex justify-between items-center h-20">
                     {/* Logo */}
                     <Link href="/">
-                        <a className="flex-shrink-0 font-semibold text-gray-700 text-xl font-display">
+                        <div className="flex-shrink-0 font-semibold text-gray-700 text-2xl cursor-pointer">
                             Startup<span className="font-sans text-gray-300 font-light">@</span>Brown
-                        </a>
+                        </div>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex md:items-center md:space-x-6">
+                    <div className="hidden md:flex md:items-center md:space-x-8">
                         {navLinks.map((link) => (
                             <Link key={link.href} href={link.href}>
-                                <a className={`${linkStyling} text-base`}>{link.label}</a>
+                                <div className={`${linkStyling} text-lg cursor-pointer`}>
+                                    {link.label}
+                                </div>
                             </Link>
                         ))}
                     </div>
 
-                    {/* Mobile Menu Button - Explicitly hidden on desktop */}
-                    <div className="flex md:hidden">
+                    {/* Mobile Menu Button */}
+                    {isMobile && (
                         <button
-                            onClick={toggleMenu}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-red-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
-                            aria-expanded="false"
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-red-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
+                            aria-expanded={isOpen}
                         >
-                            <span className="sr-only">Open main menu</span>
+                            <span className="sr-only">Toggle menu</span>
                             {isOpen ? (
                                 <X className="block h-6 w-6" aria-hidden="true" />
                             ) : (
                                 <Menu className="block h-6 w-6" aria-hidden="true" />
                             )}
                         </button>
-                    </div>
+                    )}
                 </div>
             </div>
 
             {/* Mobile Menu */}
-            <div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                    {navLinks.map((link) => (
-                        <Link key={link.href} href={link.href}>
-                            <a 
-                                className="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:text-red-600 hover:bg-gray-50"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {link.label}
-                            </a>
-                        </Link>
-                    ))}
+            {isMobile && (
+                <div className={`${isOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-200`}>
+                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white">
+                        {navLinks.map((link) => (
+                            <Link key={link.href} href={link.href}>
+                                <div 
+                                    className="block px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 cursor-pointer"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {link.label}
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </nav>
     );
 };
