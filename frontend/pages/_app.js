@@ -1,5 +1,4 @@
 import '../styles.css';
-// Remove FullCalendar CSS imports as we'll handle styles in styles.css
 import Head from "next/head";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,8 +21,22 @@ function MyApp({ Component, pageProps }) {
     return (
         <div className="app-container">
             <Head>
-                <title>Venture@Brown</title>
+                <title>Startup@Brown</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                
+                {/* Favicon and Logo metadata */}
+                <link rel="icon" href="/brown_ep_logo.png" />
+                <meta property="og:title" content="Startup@Brown" />
+                <meta property="og:description" content="Brown University's hub for student entrepreneurship" />
+                <meta property="og:image" content="/brown_ep_logo.png" />
+                <meta property="og:url" content="https://startupatbrown.com" />
+                
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Startup@Brown" />
+                <meta name="twitter:description" content="Brown University's hub for student entrepreneurship" />
+                <meta name="twitter:image" content="/brown_ep_logo.png" />
+                
                 <link 
                     rel="stylesheet" 
                     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
