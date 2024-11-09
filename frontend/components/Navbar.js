@@ -21,35 +21,36 @@ const Navbar = ({ isLanding }) => {
 
     return (
         <nav className="fixed top-0 right-0 w-full bg-white z-50 shadow-md">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link href="/">
-                        <a className="font-semibold text-gray-700 text-xl font-display">
+                        <a className="flex-shrink-0 font-semibold text-gray-700 text-xl font-display">
                             Startup<span className="font-sans text-gray-300 font-light">@</span>Brown
                         </a>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-6">
+                    <div className="hidden md:flex md:items-center md:space-x-6">
                         {navLinks.map((link) => (
                             <Link key={link.href} href={link.href}>
-                                <a className={linkStyling}>{link.label}</a>
+                                <a className={`${linkStyling} text-base`}>{link.label}</a>
                             </Link>
                         ))}
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
+                    {/* Mobile Menu Button - Explicitly hidden on desktop */}
+                    <div className="flex md:hidden">
                         <button
                             onClick={toggleMenu}
                             className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-red-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
+                            aria-expanded="false"
                         >
                             <span className="sr-only">Open main menu</span>
                             {isOpen ? (
-                                <X className="block h-6 w-6" />
+                                <X className="block h-6 w-6" aria-hidden="true" />
                             ) : (
-                                <Menu className="block h-6 w-6" />
+                                <Menu className="block h-6 w-6" aria-hidden="true" />
                             )}
                         </button>
                     </div>
@@ -57,8 +58,8 @@ const Navbar = ({ isLanding }) => {
             </div>
 
             {/* Mobile Menu */}
-            <div className={`${isOpen ? 'block' : 'hidden'} md:hidden bg-white`}>
-                <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
+                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                     {navLinks.map((link) => (
                         <Link key={link.href} href={link.href}>
                             <a 
