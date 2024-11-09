@@ -17,6 +17,7 @@
     "firebase": "^11.0.1",
     "framer-motion": "^2.7.8",
     "lodash": "^4.17.20",
+    "lucide-react": "^0.456.0",
     "next": "^10.0.1",
     "postcss-preset-env": "^6.7.0",
     "react": "16.13.1",
