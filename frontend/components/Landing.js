@@ -19,10 +19,10 @@ const Landing = () => {
 
       {/* Heading and Subheading */}
       <div className="text-center">
-        <h1 className="text-5xl font-bold text-gray-900 mt-0">
+        <h1 className="text-5xl font-bold text-gray-900 mt-0 font-display">
           Startup<span className="font-sans text-gray-400 font-light">@</span>Brown
         </h1>
-        <p className="text-2xl text-gray-500 mt-4">
+        <p className="text-2xl text-gray-500 mt-4 font-medium">
           A guide to help Brown and RISD students navigate the entrepreneurial resources on College Hill.
         </p>
 

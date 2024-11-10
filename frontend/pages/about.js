@@ -78,31 +78,37 @@ const VentureTeam = () => {
 
                     {/* Stats Column */}
                     <div className="bg-white rounded-xl shadow-sm h-full">
-                        <div className="h-full flex flex-col divide-y divide-gray-300">
-                            <div className="p-4 hover:bg-gray-50 transition-all duration-200">
-                                <div className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">
-                                    Venture Partners
+                        <div className="h-full flex flex-col">
+                            <div className="flex-1 flex flex-col">
+                                <div className="flex-1 p-4 hover:bg-gray-50 transition-all duration-200 flex flex-col justify-center">
+                                    <div className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                        Venture Partners
+                                    </div>
+                                    <div className="text-4xl font-bold text-red-600">
+                                        6
+                                    </div>
                                 </div>
-                                <div className="text-4xl font-bold text-red-600">
-                                    6
+                                
+                                <div className="h-px bg-gray-300" />
+                                
+                                <div className="flex-1 p-4 hover:bg-gray-50 transition-all duration-200 flex flex-col justify-center">
+                                    <div className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                        Startups Supported
+                                    </div>
+                                    <div className="text-4xl font-bold text-red-600">
+                                        40+
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div className="p-4 hover:bg-gray-50 transition-all duration-200">
-                                <div className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">
-                                    Startups Supported
-                                </div>
-                                <div className="text-4xl font-bold text-red-600">
-                                    40+
-                                </div>
-                            </div>
-                            
-                            <div className="p-4 hover:bg-gray-50 transition-all duration-200">
-                                <div className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">
-                                    Our Commitment to You
-                                </div>
-                                <div className="text-4xl font-bold text-red-600">
-                                    &infin;
+                                
+                                <div className="h-px bg-gray-300" />
+                                
+                                <div className="flex-1 p-4 hover:bg-gray-50 transition-all duration-200 flex flex-col justify-center">
+                                    <div className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">
+                                        Our Commitment to You
+                                    </div>
+                                    <div className="text-4xl font-bold text-red-600">
+                                        &infin;
+                                    </div>
                                 </div>
                             </div>
                         </div>
