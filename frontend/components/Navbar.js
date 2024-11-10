@@ -18,7 +18,7 @@ export default function Navbar({ isLanding }) {
 
     return (
         <>
-            <div className="fixed top-0 right-0 p-4 w-full flex justify-between items-center font-display bg-white z-50 shadow-md">
+            <div className="relative w-full p-4 flex justify-between items-center font-display bg-white z-50 shadow-md">
                 <Link href="/">
                     <a className="font-semibold text-gray-700 text-xl">
                         Startup<span className="font-sans text-gray-300 font-light">@</span>Brown
