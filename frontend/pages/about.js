@@ -2,6 +2,7 @@ import Head from "next/head";
 import Navbar from "../components/Navbar";
 import Link from "next/link";
 
+/* Team Data Array - Commented Out
 const venturePartners = [
     {
         name: "Faz Zaidi",
@@ -34,6 +35,7 @@ const venturePartners = [
         image: "/images/venture_partner_6.jpg"
     }
 ];
+*/
 
 const VentureTeam = () => {
     return (
@@ -179,7 +181,7 @@ const VentureTeam = () => {
                     </div>
                 </div>
 
-                {/* Team Section */}
+                {/* Team Section - Commented Out 
                 <div className="bg-white rounded-xl shadow-sm mt-12">
                     <div className="p-6">
                         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
@@ -202,6 +204,7 @@ const VentureTeam = () => {
                         </div>
                     </div>
                 </div>
+                */}
 
                 {/* Contact Banner */}
                 <div className="bg-white rounded-2xl shadow-sm p-8 my-12">
