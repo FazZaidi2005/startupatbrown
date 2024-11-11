@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Navbar from "../components/Navbar";
+import Link from "next/link";
 
 const venturePartners = [
     {
@@ -115,6 +116,69 @@ const VentureTeam = () => {
                     </div>
                 </div>
 
+                {/* Resources Section */}
+                <div className="grid md:grid-cols-3 gap-6 my-12">
+                    <div className="group bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-6 text-white">
+                        <div className="h-12 w-12 bg-white/20 rounded-xl mb-4 flex items-center justify-center">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold mb-3">Events</h3>
+                        <p className="text-white/90 mb-6">
+                            Stay updated with the latest workshops, networking opportunities, and startup events at Brown.
+                        </p>
+                        <Link href="/events">
+                            <a className="inline-flex items-center text-white group-hover:translate-x-2 transition-transform">
+                                View Calendar
+                                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        </Link>
+                    </div>
+
+                    <div className="group bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-6 text-white">
+                        <div className="h-12 w-12 bg-white/20 rounded-xl mb-4 flex items-center justify-center">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold mb-3">Opportunities</h3>
+                        <p className="text-white/90 mb-6">
+                            Discover exciting opportunities to get involved in the startup community and connect with like-minded peers.
+                        </p>
+                        <Link href="/listings">
+                            <a className="inline-flex items-center text-white group-hover:translate-x-2 transition-transform">
+                                Browse Listings
+                                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        </Link>
+                    </div>
+
+                    <div className="group bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-6 text-white">
+                        <div className="h-12 w-12 bg-white/20 rounded-xl mb-4 flex items-center justify-center">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold mb-3">Resources</h3>
+                        <p className="text-white/90 mb-6">
+                            Access programs, grants, and comprehensive support to help launch and scale your venture successfully.
+                        </p>
+                        <Link href="/resources">
+                            <a className="inline-flex items-center text-white group-hover:translate-x-2 transition-transform">
+                                Access Resources
+                                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        </Link>
+                    </div>
+                </div>
+
                 {/* Team Section */}
                 <div className="bg-white rounded-xl shadow-sm mt-12">
                     <div className="p-6">
@@ -139,8 +203,26 @@ const VentureTeam = () => {
                     </div>
                 </div>
 
+                {/* Contact Banner */}
+                <div className="bg-white rounded-2xl shadow-sm p-8 my-12">
+                    <div className="max-w-3xl mx-auto text-center">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Begin Your Journey?</h2>
+                        <p className="text-gray-600 text-lg mb-6">
+                            Whether you're just starting out or looking to scale, we're here to support your entrepreneurial journey.
+                        </p>
+                        <Link href="/contact">
+                            <a className="inline-flex items-center px-8 py-4 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors duration-200">
+                                Get in Touch
+                                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                        </Link>
+                    </div>
+                </div>
+
                 {/* Nelson Center Link */}
-                <div className="text-center mt-12">
+                <div className="text-center">
                     <a 
                         href="https://entrepreneurship.brown.edu/"
                         target="_blank"
