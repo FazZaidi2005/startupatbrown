@@ -51,10 +51,11 @@ export default function Navbar({ isLanding }) {
             {isOpen && (
                 <div className="fixed top-16 left-0 w-full bg-white z-40 shadow-md sm:hidden">
                     <div className="flex flex-col items-center py-2">
-                        {navLinks.map((link) => (
+                        {/* Add margin-top to the first link (About) */}
+                        {navLinks.map((link, index) => (
                             <Link key={link.href} href={link.href}>
                                 <a 
-                                    className={mobileLinkStyling}
+                                    className={`${mobileLinkStyling} ${index === 0 ? 'mt-4' : ''}`} // Adds extra space above the first link
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {link.text}

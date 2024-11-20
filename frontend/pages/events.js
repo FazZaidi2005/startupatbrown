@@ -13,9 +13,10 @@ const Events = () => {
                 <title>Events | Venture@Brown</title>
                 <meta name="description" content="Entrepreneurship events calendar for Brown and RISD" />
             </Head>
-            <Navbar />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <Navbar />
+                
                 <div className="text-center max-w-3xl mx-auto mt-16 mb-12">
                     <h1 className="text-5xl font-bold text-gray-900 font-display mb-6">Events Calendar</h1>
                     <p className="text-xl text-gray-600 mb-8">
@@ -32,7 +33,6 @@ const Events = () => {
                     </a>
                 </div>
 
-                {/* Embed Google Calendar */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 pb-8">
                     <iframe
                         src={calendarSrc}
