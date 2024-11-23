@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import React, { useState } from "react";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
-export default function Navbar({ isLanding }) {
+export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     const linkStyling = "text-gray-500 hover:text-red-600 focus:text-red-500 transition duration-200 ease-in-out";
@@ -18,7 +18,9 @@ export default function Navbar({ isLanding }) {
 
     return (
         <>
+            {/* Navbar container */}
             <div className="fixed top-0 right-0 p-4 w-full flex justify-between items-center font-display bg-white z-50 shadow-md">
+                {/* Logo - navigates to the home (landing) page */}
                 <Link href="/">
                     <a className="font-semibold text-gray-700 text-xl">
                         Startup<span className="font-sans text-gray-300 font-light">@</span>Brown
@@ -50,7 +52,7 @@ export default function Navbar({ isLanding }) {
                         {navLinks.map((link, index) => (
                             <Link key={link.href} href={link.href}>
                                 <a
-                                    className={`${mobileLinkStyling} ${index === 0 ? "mt-4" : ""}`} // Adds extra space above the first link
+                                    className={`${mobileLinkStyling} ${index === 0 ? "mt-4" : ""}`}
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {link.text}
