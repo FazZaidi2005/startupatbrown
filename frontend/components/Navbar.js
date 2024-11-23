@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar({ isLanding }) {
     const [isOpen, setIsOpen] = useState(false);
-    
-    const linkStyling = `text-gray-500 hover:text-red-600 focus:text-red-500 transition duration-200 ease-in-out ${!isLanding && "hidden sm:inline"}`;
+
+    const linkStyling = "text-gray-500 hover:text-red-600 focus:text-red-500 transition duration-200 ease-in-out";
     const mobileLinkStyling = "text-gray-500 hover:text-red-600 focus:text-red-500 transition duration-200 ease-in-out w-full text-center py-3";
 
     const navLinks = [
@@ -24,7 +24,7 @@ export default function Navbar({ isLanding }) {
                         Startup<span className="font-sans text-gray-300 font-light">@</span>Brown
                     </a>
                 </Link>
-                
+
                 {/* Desktop Navigation */}
                 <div className="hidden sm:flex items-center space-x-4 md:space-x-6">
                     {navLinks.map((link) => (
@@ -35,15 +35,11 @@ export default function Navbar({ isLanding }) {
                 </div>
 
                 {/* Mobile Menu Button */}
-                <button 
+                <button
                     onClick={() => setIsOpen(!isOpen)}
                     className="sm:hidden p-2 text-gray-500 hover:text-red-600 transition duration-200"
                 >
-                    {isOpen ? (
-                        <X className="h-6 w-6" />
-                    ) : (
-                        <Menu className="h-6 w-6" />
-                    )}
+                    {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                 </button>
             </div>
 
@@ -51,11 +47,10 @@ export default function Navbar({ isLanding }) {
             {isOpen && (
                 <div className="fixed top-16 left-0 w-full bg-white z-40 shadow-md sm:hidden">
                     <div className="flex flex-col items-center py-2">
-                        {/* Add margin-top to the first link (About) */}
                         {navLinks.map((link, index) => (
                             <Link key={link.href} href={link.href}>
-                                <a 
-                                    className={`${mobileLinkStyling} ${index === 0 ? 'mt-4' : ''}`} // Adds extra space above the first link
+                                <a
+                                    className={`${mobileLinkStyling} ${index === 0 ? "mt-4" : ""}`} // Adds extra space above the first link
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {link.text}
