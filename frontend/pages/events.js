@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import { CalendarPlus } from 'lucide-react';
 
 const Events = () => {
-    const calendarId = 'c_1ef5e176db9f1962a856f4029a96cfd9d0a8bbdb581e3dc7960855bbbc876cd2@group.calendar.google.com';
+    const calendarId = 'c_006098410f1cacd8098dbee68c8d8d164f6289ec6562a2c6c5f65aa023bdc2ef@group.calendar.google.com';
     const calendarSrc = `https://calendar.google.com/calendar/embed?src=${calendarId}&ctz=America/New_York`;
     const calendarSubscribeLink = `https://calendar.google.com/calendar/r?cid=${calendarId}`;
 
